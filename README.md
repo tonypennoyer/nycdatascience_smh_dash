@@ -1,3 +1,3 @@
 # nycdatascience_smh_dash
 
-# Collaborators
+<h2>Collaborators</h2>
