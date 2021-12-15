@@ -24,6 +24,7 @@ app_tabs = html.Div(
             [
                 dbc.Tab(label="Desirability Scored", tab_id="tab-desire", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="Affordability Index", tab_id="tab-afford", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
+                dbc.Tab(label="About", tab_id="tab-about", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="Prediction", tab_id="tab-predict", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="EDA", tab_id="tab-eda", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
             ],
@@ -56,6 +57,8 @@ def switch_tab(tab_chosen):
         return predict_layout
     elif tab_chosen == "tab-eda":
         return eda_layout
+    elif tab_chosen == "tab-about":
+        return about_layout
     return html.P("This shouldn't be displayed for now...")
 
 
