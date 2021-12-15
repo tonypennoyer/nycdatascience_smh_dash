@@ -13,6 +13,7 @@ from desire import desire_layout
 from afford import afford_layout
 from predict import predict_layout
 from eda import eda_layout 
+from about import about_layout
 
 
 
@@ -24,10 +25,9 @@ app_tabs = html.Div(
             [
                 dbc.Tab(label="Desirability Scored", tab_id="tab-desire", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="Affordability Index", tab_id="tab-afford", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
-                dbc.Tab(label="About", tab_id="tab-about", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="Prediction", tab_id="tab-predict", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="EDA", tab_id="tab-eda", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
-                dbc.Tab(label="About", tab_id="tab-about", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger")
+                dbc.Tab(label="About", tab_id="tab-about", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
             ],
             id="tabs",
             active_tab="tab-desire",
