@@ -27,6 +27,7 @@ app_tabs = html.Div(
                 dbc.Tab(label="About", tab_id="tab-about", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="Prediction", tab_id="tab-predict", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="EDA", tab_id="tab-eda", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
+                dbc.Tab(label="About", tab_id="tab-about", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger")
             ],
             id="tabs",
             active_tab="tab-desire",
