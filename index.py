@@ -1,17 +1,28 @@
-import dash_bootstrap_components as dbc
 import dash
-import dash_html_components as html
-import dash_core_components as dcc
+from dash import html
+from dash import dcc
+import dash_bootstrap_components as dbc
 from dash.dependencies import Output, Input
+
+# connect with main app.py file
 from app import app
+from app import server
+
+# import tab layouts
+from desire import desire_layout
+from afford import afford_layout
+from predict import predict_layout
+from eda import eda_layout 
+
 
 
 # our app's Tabs *********************************************************
+
 app_tabs = html.Div(
     [
         dbc.Tabs(
             [
-                dbc.Tab(label="Desirability Score", tab_id="tab-desire", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
+                dbc.Tab(label="Desirability Scored", tab_id="tab-desire", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="Affordability Index", tab_id="tab-afford", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="Prediction", tab_id="tab-predict", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
                 dbc.Tab(label="EDA", tab_id="tab-eda", labelClassName="text-success font-weight-bold", activeLabelClassName="text-danger"),
