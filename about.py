@@ -56,7 +56,7 @@ about_layout = html.Div([
     dbc.Row([
         html.Div([
             html.Img(src="https://i.ibb.co/kcnMR5D/cropped.jpg",style={'height':'63px','border-radius': '50%'}),
-            html.H4('Tony Pennoyer',style={'margin-left': '20px','padding-top': '35px','display':'inline-block','text-align':'center'}),
+            html.H4('Tony Pennoyer',style={'margin-left': '20px','padding-top': '35px','display':'inline-block','text-align':'center','padding-bottom': '35px',}),
             dbc.Button("LinkedIn", outline=True, color="primary", className="me-1",href='https://www.linkedin.com/in/tony-pennoyer/',target="_blank",
                 style={'margin-left': '20px','background-color': '#0e76a8','border': 'none','color': 'white','padding': '10px 24px','text-align': 'center',
                 'border-radius': '5px','font-size': '16px','width': '150px','display': 'inline-block'}),
@@ -65,5 +65,10 @@ about_layout = html.Div([
                 'border-radius': '5px','font-size': '16px','width': '150px','display': 'inline-block'}),
         ]),
     ]),
+    # dbc.Row([
+    #     html.Div([
+    #         html.P(' We are currently Data Science Fellows at NYC Data Science Academy',style={'border-radius': '5px','width':'600px'}),
+    #     ])
+    # ]),
 ])
 
