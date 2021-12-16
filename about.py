@@ -19,7 +19,8 @@ about_layout = html.Div([
     html.Hr(),
     dbc.Row([
         html.Div([
-            html.H4('Daniel Nie',style={'display':'inline-block'}),
+            html.Img(src="https://i.ibb.co/R2fnbBg/profile-icon-png-898.png",style={'height':'63px','border-radius': '50%'}),
+            html.H4('Daniel Nie',style={'margin-left': '20px','display':'inline-block'}),
             dbc.Button("LinkedIn", outline=True, color="primary", className="me-1",href='https://www.linkedin.com/in/danielnie/',target="_blank",
                 style={'margin-left': '20px','background-color': '#0e76a8','border': 'none','color': 'white','padding': '10px 24px','text-align': 'center',
                 'border-radius': '5px','font-size': '16px','width': '150px','display': 'inline-block'}),
@@ -30,7 +31,8 @@ about_layout = html.Div([
     ]),
     dbc.Row([
         html.Div([
-            html.H4('Jack Copeland',style={'padding-top': '35px','display':'inline-block'}),
+            html.Img(src="https://i.ibb.co/R2fnbBg/profile-icon-png-898.png",style={'height':'63px','border-radius': '50%'}),
+            html.H4('Jack Copeland',style={'margin-left': '20px','padding-top': '35px','display':'inline-block'}),
             dbc.Button("LinkedIn", outline=True, color="primary", className="me-1",href='https://www.linkedin.com/in/jack-copeland-84417b124/',target="_blank",
                 style={'margin-left': '20px','background-color': '#0e76a8','border': 'none','color': 'white','padding': '10px 24px','text-align': 'center',
                 'border-radius': '5px','font-size': '16px','width': '150px','display': 'inline-block'}),
@@ -41,18 +43,20 @@ about_layout = html.Div([
     ]),
     dbc.Row([
         html.Div([
-            html.H4('Nicole Wang',style={'padding-top': '35px','display':'inline-block'}),
+            html.Img(src="https://i.ibb.co/R2fnbBg/profile-icon-png-898.png",style={'height':'63px','border-radius': '50%'}),
+            html.H4('Nicole Wang',style={'margin-left': '20px','padding-top': '35px','display':'inline-block'}),
             dbc.Button("LinkedIn", outline=True, color="primary", className="me-1",href='https://www.linkedin.com/in/nickelworks/',target="_blank",
                 style={'margin-left': '20px','background-color': '#0e76a8','border': 'none','color': 'white','padding': '10px 24px','text-align': 'center',
                 'border-radius': '5px','font-size': '16px','width': '150px','display': 'inline-block'}),
             dbc.Button("GitHub", outline=True, color="secondary", className="me-1",href='https://github.com/nickelworks',target="_blank",
                 style={'margin-left': '10px','background-color': '#808080','border': 'none','color': 'white','padding': '10px 24px','text-align': 'center',
                 'border-radius': '5px','font-size': '16px','width': '150px','display': 'inline-block'}),
-        ]),
+        ]), 
     ]),
     dbc.Row([
         html.Div([
-            html.H4('Tony Pennoyer',style={'padding-top': '35px','display':'inline-block'}),
+            html.Img(src="https://i.ibb.co/kcnMR5D/cropped.jpg",style={'height':'63px','border-radius': '50%'}),
+            html.H4('Tony Pennoyer',style={'margin-left': '20px','padding-top': '35px','display':'inline-block','text-align':'center'}),
             dbc.Button("LinkedIn", outline=True, color="primary", className="me-1",href='https://www.linkedin.com/in/tony-pennoyer/',target="_blank",
                 style={'margin-left': '20px','background-color': '#0e76a8','border': 'none','color': 'white','padding': '10px 24px','text-align': 'center',
                 'border-radius': '5px','font-size': '16px','width': '150px','display': 'inline-block'}),
