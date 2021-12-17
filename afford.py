@@ -154,7 +154,7 @@ def affordability(selected_area,selected_distance, rf_metroMeanPrice=rf_metroMea
         
             
         return f'Average resale home price in this area is ${rf_metroMeanPrice}'
-        # return f'Average resale home in this area is {rf_metroYearMean} years old'
-        # print(f'Expected resale premium is {expectedResalePrem}')
-        # print(f'Actual resale premium is ${actualResalePrem}')
-        # print(f'The Relative Afford Score is {score}')
+        return f'Average resale home in this area is {rf_metroYearMean} years old'
+        print(f'Expected resale premium is {expectedResalePrem}')
+        print(f'Actual resale premium is ${actualResalePrem}')
+        print(f'The Relative Afford Score is {score}')
