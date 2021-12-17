@@ -12,9 +12,8 @@ model_path = os.getcwd() + '\model_assets'
 
 import pickle
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import LabelEncoder
-from catboost import CatBoostRegressor
+# from sklearn.preprocessing import LabelEncoder
+# from catboost import CatBoostRegressor
 
 #--------------------------------------------------------------------------------------------------
 #---------Definitions----------
@@ -34,6 +33,31 @@ prop_encode = {'Single Family Residential':0,
 # X_pred = X_pred.append(zip_model_data.loc[20002])
 # X_pred['Prop_Type'] = prop_encode[X_pred['Prop_Type']]
 # X_pred['zip'] = zip_encoder.transform(pd.Series([20002]))[0]
+#--------------------------------------------------------------------------------------------------
+#---------Functions----------
+def clean_num(integer):
+    '''
+    takes an integer and return a string representation of that integer with commas correctly separating groups of three digits
+    '''
+    if isinstance(integer, int):
+        pass
+    else:
+        integer = int(round(integer))
+    collector = []
+    sub = ''
+    for idx, char in enumerate(str(integer)[::-1]):
+        if (idx+1)%3 != 0:
+            sub += char
+        else:
+            sub += char
+            collector.append(sub)
+            sub = ''
+    if sub == '':
+        pass
+    else:
+        collector.append(sub)
+    return ','.join(collector)[::-1]
+
 
 predict_layout = html.Div( # Total Row Width = 12
     [    
@@ -196,4 +220,4 @@ def set_price_display(selected_zip, selected_pt, selected_sf, selected_bed, sele
     X_pred['BEDS'] = selected_bed
     X_pred['BATHS'] = selected_bath
     X_pred['YearBuilt'] = selected_year
-    return f'$ {np.round(10**pickled_model.predict(X_pred))}'
+    return f'$ {clean_num(10**pickled_model.predict(X_pred))}'
