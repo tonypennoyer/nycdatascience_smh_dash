@@ -28,6 +28,7 @@ prop_encode = {'Single Family Residential':0,
                'Multi-Family (2-4 Unit)':3,
                'Ranch':4,
                'Multi-Family (5+ Unit)':5}
+clusters = pd.read_csv(model_path+'\clusters.csv', index_col='ZipCode')
 
 # Prepares prediction inputs
 # X_pred = X_pred.append(zip_model_data.loc[20002])
@@ -138,18 +139,27 @@ predict_layout = html.Div( # Total Row Width = 12
         # Column2 - Content
         dbc.Col(
             html.Div([
-            
-            html.H2(id='model-price'),
-            html.Br(),
-            html.Hr(),
-            html.P(id='display-loc'),
-            html.Br(),
-            html.P(id='display-proptype'),
-            html.Plaintext(id='display-sf'),
-            html.Plaintext(id='display-bed'),
-            html.Plaintext(id='display-bath')
+                html.P('Suggested Price Range:'),
+                html.H2(id='model-price'),
+                html.Br(),
+                html.Hr(),
+                html.Br(),
+                html.P(id='display-proptype'),
+                html.Plaintext(id='display-sf'),
+                html.Plaintext(id='display-bed'),
+                html.Plaintext(id='display-bath')
             ])
-        , width=8)
+        , width=4),
+        dbc.Col(
+            html.Div([
+                html.P(id='display-loc'),
+                html.H4(id='display-ZIP'),
+                html.Br(),
+                html.Hr(),
+                html.H4(id='display-cluster'),
+                html.Br()
+            ])
+        , width=4),
     ]),
     html.Hr(),
     # Testing
@@ -172,10 +182,21 @@ def set_zip_value(available_options):
 
 @app.callback(
     Output('display-loc', 'children'),
-    Input('msa-drop', 'value'),
+    Input('msa-drop', 'value'))
+def set_display_loc(selected_msa):
+    return f'{selected_msa})'
+
+@app.callback(
+    Output('display-ZIP', 'children'),
     Input('zip-drop', 'value'))
-def set_display_loc(selected_msa, selected_zip):
-    return f'{selected_msa} (ZIP {selected_zip})'
+def set_display_loc(selected_zip):
+    return f'ZipCode: {selected_zip}'
+
+@app.callback(
+    Output('display-cluster', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    return f'Cluster: {clusters.loc[selected_zip,"cluster"]}'
 
 @app.callback(
     Output('display-proptype', 'children'),
@@ -215,9 +236,14 @@ def set_price_display(selected_zip, selected_pt, selected_sf, selected_bed, sele
                         X_pred=X_pred, prop_encode=prop_encode):
     X_pred = X_pred.append(zip_model_data.loc[selected_zip])
     X_pred['Prop_Type'] = prop_encode[selected_pt]
-    X_pred['zip'] = zip_encoder.transform(pd.Series(selected_zip))[0]
-    X_pred['SF'] = selected_sf
-    X_pred['BEDS'] = selected_bed
-    X_pred['BATHS'] = selected_bath
-    X_pred['YearBuilt'] = selected_year
-    return f'$ {clean_num(10**pickled_model.predict(X_pred))}'
+    try:
+        X_pred['zip'] = zip_encoder.transform(pd.Series(selected_zip))[0]
+    except:
+        return 'ZIP not seen in data, please select another'
+    else:
+        X_pred['SF'] = selected_sf
+        X_pred['BEDS'] = selected_bed
+        X_pred['BATHS'] = selected_bath
+        X_pred['YearBuilt'] = selected_year
+        pred_prx = 10**pickled_model.predict(X_pred)
+        return f'$ {clean_num(round(pred_prx - pred_prx*0.05,-4))} - {clean_num(round(pred_prx + pred_prx*0.05,-4))}'
