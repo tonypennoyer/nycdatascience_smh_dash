@@ -10,10 +10,13 @@ import geopy.distance
 from dash.dependencies import Output, Input, State
 from app import app
 
-rf_distance = pd.read_csv('rf_distance.csv')
-smh_centroid = pd.read_csv('smh_centroid.csv')
-metroCentroidGuide = pd.read_csv('centroid_guide.csv')
+rf_distance = pd.read_csv('afford_assets/rf_distance.csv')
+smh_centroid = pd.read_csv('afford_assets/smh_centroid.csv')
 rf_metroMeanPrice = 0
+
+distance_areas_list = ['Distance_from_Atlanta', 'Distance_from_Richmond', 'Distance_from_Charleston', 'Distance_from_Northern Virginia',
+           'Distance_from_Charlottesville','Distance_from_Maryland','Distance_from_Raleigh','Distance_from_Charlotte',
+           'Distance_from_Greenville/Spartanburg','Distance_from_Orlando','Distance_from_Aiken/Augusta','Distance_from_Columbia']
 
 afford_layout = html.Div([
     dbc.Row([
@@ -43,18 +46,13 @@ afford_layout = html.Div([
         html.Div(id='display-area')
     ]),
     html.Div([
-        dcc.Dropdown(
+        dcc.Slider(
             id='distance-dropdown',
-            options=[
-                {'label': 'Less than 5 miles', 'value': '5'},
-                {'label': '10 Miles', 'value': '10'},
-                {'label': '25 Miles', 'value': '25'},
-                {'label': '50 Miles', 'value': '50'},
-                {'label': '100 Miles', 'value': '100'},
-                {'label': '250 Miles', 'value': '250'},
-                {'label': '500 Miles', 'value': '500'},
-            ],
-            value='10'
+            min=0,
+            max=200,
+            step=1,
+            value=20,
+            tooltip={"placement": "bottom", "always_visible": True},
         ),
         html.Div(id='display-distance')
     ]),
@@ -64,7 +62,15 @@ afford_layout = html.Div([
             html.Hr(),
             html.P(id='display-distance'),
             html.Br(),
-            html.P(id='display-affordability'),
+            html.P(id='display-resale-price'),
+            html.Br(),
+            html.P(id='display-resale-year'),
+            html.Br(),
+            html.P(id='display-expected-resale-premium'),
+            html.Br(),
+            html.P(id='display-actual-resale-premium'),
+            html.Br(),
+            html.P(id='display-score'),
         ]),
     ),
     html.Hr(),
@@ -88,40 +94,40 @@ def distance_selected(selected_distance):
 
 
 @app.callback(
-    Output('display-affordability', 'children'),
+    [
+        Output('display-resale-price', 'children'),
+        Output('display-resale-year', 'children'),
+        Output('display-expected-resale-premium', 'children'),
+        Output('display-actual-resale-premium', 'children'),
+        Output('display-score', 'children')
+    ],
     Input('area-dropdown', 'value'),
     Input('distance-dropdown', 'value'))
-def affordability(selected_area,selected_distance, rf_metroMeanPrice=rf_metroMeanPrice) :
-    selected_distance = int(selected_distance)
-    radiusInput = float(selected_distance) * 1.60934
-    radiusInput = int(radiusInput)
-
+def affordability(selected_area,selected_distance) :
     # gets only smh homes in inputted area
     smh_metro = smh_centroid[smh_centroid['Area'] == selected_area]
-
+        
     # if input isn't florida then get rid of all FL Refin homes (saves time)
     if selected_area != 'Orlando' :
         rf_metro = rf_distance[rf_distance['STATE OR PROVINCE'] != 'FL']
     else :  rf_metro = rf_distance[rf_distance['STATE OR PROVINCE'] == 'FL']
 
-    # Get the centroid of inputted metro area
-    gotCentroid = metroCentroidGuide[metroCentroidGuide['Area'] == selected_area]
-    gotCentroid = gotCentroid['centroid'].item()
-    # map that centroid to column
-    rf_metro['centroid'] = [gotCentroid] * len(rf_metro)
-    # perform distance calculation
-    rf_metro['distance'] = rf_metro.apply(lambda x: geopy.distance.geodesic(x.lat_long, x.centroid), axis = 1)
+    chosen_column = []
+    for area in distance_areas_list :
+        if area.split('_')[2] == selected_area :
+            chosen_column = area
 
-    # clean distance
-    rf_metro['distance'] = rf_metro['distance'].astype(str)
-    rf_metro['distance'] = rf_metro['distance'].str.rstrip(' km')
-    rf_metro['distance'] = rf_metro['distance'].astype(float)
-    rf_metro['distance'] = rf_metro['distance'].round(2)
-    rf_metro = rf_metro[rf_metro['distance'] < selected_distance]
+    selected_distance = int(selected_distance)
+    rf_metro = rf_distance[rf_distance[chosen_column] < selected_distance]
 
     # if no homes produce error msg
     if len(rf_metro) < 1 | len(smh_metro) :
-        print('No homes in this radius, pick a larger radius')
+        resale_price = 'No homes in this radius, pick a larger radius'
+        resale_yr = ''
+        resale_expPrem = ''
+        resale_actPrem = ''
+        score = ''
+        return resale_price, resale_yr,resale_expPrem, resale_actPrem, score
     elif len(rf_metro) > 1 : 
         smh_metroMeanPrice = round(smh_metro["MedianSalesPrice"].mean())
         rf_metroMeanPrice = round(rf_metro["PRICE"].mean())
@@ -151,10 +157,15 @@ def affordability(selected_area,selected_distance, rf_metroMeanPrice=rf_metroMea
             score = '3 Below Expected Premium'
         elif actualResalePrem == expectedResalePrem :
             score = '2 In Line with Expected Premium'
+
+        resale_price = f'Average resale home price in this area is ${rf_metroMeanPrice}'
+        resale_yr = f'Average resale home in this area is {rf_metroYearMean} years old'
+        resale_expPrem = f'Expected resale premium is ${expectedResalePrem}'
+        resale_actPrem = f'Actual resale premium is ${actualResalePrem}'
+        score = f'The Relative Afford Score is {score}'
         
-            
-        return f'Average resale home price in this area is ${rf_metroMeanPrice}'
-        return f'Average resale home in this area is {rf_metroYearMean} years old'
-        print(f'Expected resale premium is {expectedResalePrem}')
-        print(f'Actual resale premium is ${actualResalePrem}')
-        print(f'The Relative Afford Score is {score}')
+        return resale_price, resale_yr,resale_expPrem, resale_actPrem, score
+
+        
+    
+    
