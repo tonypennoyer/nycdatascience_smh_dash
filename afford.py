@@ -20,79 +20,75 @@ distance_areas_list = ['Distance_from_Atlanta', 'Distance_from_Richmond', 'Dista
            'Distance_from_Greenville/Spartanburg','Distance_from_Orlando','Distance_from_Aiken/Augusta','Distance_from_Columbia']
 
 afford_layout = html.Div([
-     html.Div([
-        dbc.Row([
-            dbc.Col([
-                html.P("Specify Metro Area", style={'padding-top':'5px','padding-bottom':'10px'})
-            ], width=12)
-        ]),
-    ]),
-    html.Div([
-        dcc.Dropdown(
-            id='area-dropdown',
-            options=[
-                {'label': 'Aiken/Augusta', 'value': 'Aiken/Augusta'},
-                {'label': 'Atlanta', 'value': 'Atlanta'},
-                {'label': 'Charleston', 'value': 'Charleston'},
-                {'label': 'Charlotte', 'value': 'Charlotte'},
-                {'label': 'Charlottesville', 'value': 'Charlottesville'},
-                {'label': 'Columbia', 'value': 'Columbia'},
-                {'label': 'Greenville/Spartanburg', 'value': 'Greenville/Spartanburg'},
-                {'label': 'Maryland', 'value': 'Maryland'},
-                {'label': 'Northern Virginia', 'value': 'Northern Virginia'},
-                {'label': 'Orlando', 'value': 'Orlando'},
-                {'label': 'Raleigh', 'value': 'Raleigh'},
-                {'label': 'Richmond', 'value': 'Richmond'},
-            ],
-            value='Aiken/Augusta'
-        ),
-        html.Div(id='display-area')
-    ]),
-    html.Div([
-        dbc.Row([
-            dbc.Col([
-                html.P("Specify Distance from Metro Area", style={'padding-top':'30px','padding-bottom':'10px'})
-            ], width=12)
-        ]),
-    ]),
-    html.Div([
-        dcc.Slider(
-            id='distance-dropdown',
-            min=0,
-            max=200,
-            step=1,
-            value=20,
-            tooltip={"placement": "bottom", "always_visible": True},
-        ),
-        html.Div(id='display-distance')
-    ]),
-    html.Div([
-        dbc.Row([
-            dbc.Col([
-                html.P("", style={'padding-top':'5px'})
-            ], width=12)
-        ]),
-    ]),
-    dbc.Col(
-        html.Div([
-            html.Hr(),
+    # Title Row
+    dbc.Row(dbc.Col(html.H3("Affordability Index"))),
+    html.Hr(),
+    dbc.Row(
+        [
+        # Column1 - sidebar
+        dbc.Col(
+            html.Div([
+            # Metro Dropdown Selector
+            dcc.Dropdown(id='area-dropdown',
+                options=[
+                    {'label': 'Aiken/Augusta', 'value': 'Aiken/Augusta'},
+                    {'label': 'Atlanta', 'value': 'Atlanta'},
+                    {'label': 'Charleston', 'value': 'Charleston'},
+                    {'label': 'Charlotte', 'value': 'Charlotte'},
+                    {'label': 'Charlottesville', 'value': 'Charlottesville'},
+                    {'label': 'Columbia', 'value': 'Columbia'},
+                    {'label': 'Greenville/Spartanburg', 'value': 'Greenville/Spartanburg'},
+                    {'label': 'Maryland', 'value': 'Maryland'},
+                    {'label': 'Northern Virginia', 'value': 'Northern Virginia'},
+                    {'label': 'Orlando', 'value': 'Orlando'},
+                    {'label': 'Raleigh', 'value': 'Raleigh'},
+                    {'label': 'Richmond', 'value': 'Richmond'},
+                ],
+                placeholder="Select Metro Area", value='Richmond',
+            ),
             html.Br(),
-            html.P('Average resale home price in this area: ',style={'display':'inline-block','white-space': 'pre'}),
-            html.P(id='display-resale-price',style={'display':'inline-block','font-weight':'bold'}),
+            html.P("Specify Radius"),
+            dcc.Slider(
+                id='distance-dropdown',
+                min=0,
+                max=200,
+                step=1,
+                value=20,
+                tooltip={"placement": "bottom", "always_visible": True}),
             html.Br(),
-            html.P('Average resale home age in this area: ',style={'display':'inline-block','white-space': 'pre'}),
-            html.P(id='display-resale-year',style={'display':'inline-block','font-weight':'bold'}),
-            html.Br(),
-            html.P('Expected resale premium in this area: ',style={'display':'inline-block','white-space': 'pre'}),
-            html.P(id='display-expected-resale-premium',style={'display':'inline-block','font-weight':'bold'}),
-            html.Br(),
-            html.P('Actual resale premium in this area: ',style={'display':'inline-block','white-space': 'pre'}),
-            html.P(id='display-actual-resale-premium',style={'display':'inline-block','font-weight':'bold'}),
-            html.Br(),
-            html.P('Score: ',style={'display':'inline-block','white-space': 'pre'}),
-            html.P(id='display-score',style={'display':'inline-block','font-weight':'bold'}),
-        ]),
-    ),
+            ])
+        , width=4),
+
+        dbc.Col(
+            html.Div([
+                html.P('Relative Afford Score: ',style={'white-space': 'pre'}),
+                html.H3(id='display-score',style={'font-weight':'bold'}),
+                html.Br(),
+                html.Hr(),
+                html.Br(),
+                html.P('Average resale home value: ',style={'display':'inline-block','white-space': 'pre'}),
+                html.P(id='display-resale-price',style={'display':'inline-block'}),
+                html.Br(),
+                html.P('Average resale home age: ',style={'display':'inline-block','white-space': 'pre'}),
+                html.P(id='display-resale-year',style={'display':'inline-block'}),
+                html.Br(),
+                html.P('Expected resale premium: ',style={'display':'inline-block','white-space': 'pre'}),
+                html.P(id='display-expected-resale-premium',style={'display':'inline-block'}),
+                html.Br(),
+                html.P('Actual resale premium: ',style={'display':'inline-block','white-space': 'pre'}),
+                html.P(id='display-actual-resale-premium',style={'display':'inline-block'}),
+                html.Br(),
+            ])
+        , width=5),
+        dbc.Col(
+            html.Div([
+                html.P(id='display-area'),
+                html.H4(id='display-distance',style={'padding-bottom':'5px'}),
+                html.Br(),
+                html.Hr(),
+            ])
+        , width=3),
+    ]),
     # html.Div([
     #     dash_table.DataTable(
     #         id='rf-table',
@@ -103,17 +99,17 @@ afford_layout = html.Div([
 ])
 
 
-# @app.callback(
-#     Output('display-area', 'children'),
-#     Input('area-dropdown', 'value'))
-# def area_selected(selected_area):
-#     return f'You have selected the {selected_area} area'
+@app.callback(
+    Output('display-area', 'children'),
+    Input('area-dropdown', 'value'))
+def area_selected(selected_area):
+    return f'{selected_area}'
 
 @app.callback(
     Output('display-distance', 'children'),
     Input('distance-dropdown', 'value'))
 def distance_selected(selected_distance):
-    return f'You have selected {selected_distance} Miles'
+    return f'{selected_distance} Miles'
 
 
 
@@ -159,41 +155,41 @@ def affordability(selected_area,selected_distance) :
         smh_metroMeanPrice = round(smh_metro["MedianSalesPrice"].mean())
         rf_metroMeanPrice = round(rf_metro["PRICE"].mean())
         rf_metroYearMean = 2021 - (round(rf_metro["YEAR BUILT"].mean()))
-        actualResalePrem = round(((smh_metroMeanPrice - rf_metroMeanPrice) / rf_metroMeanPrice),2)
+        actualResalePrem = int(round(((smh_metroMeanPrice - rf_metroMeanPrice) / rf_metroMeanPrice),2)*100)
         
         if (rf_metroYearMean >= 0 and rf_metroYearMean <= 5) == True :
-            rf_metroExpectPrem = .95
+            rf_metroExpectPrem = 5
         elif (rf_metroYearMean >= 6 and rf_metroYearMean <= 10) == True :
-            rf_metroExpectPrem = .9
+            rf_metroExpectPrem = 10
         elif (rf_metroYearMean >= 11 and rf_metroYearMean <= 15) == True :
-            rf_metroExpectPrem = .8
+            rf_metroExpectPrem = 20
         elif (rf_metroYearMean >= 16 and rf_metroYearMean <= 20) == True :
-            rf_metroExpectPrem = .75
+            rf_metroExpectPrem = 25
         elif (rf_metroYearMean >= 21 and rf_metroYearMean <= 30) == True :
-            rf_metroExpectPrem = .6
+            rf_metroExpectPrem = 40
         elif (rf_metroYearMean >= 31 and rf_metroYearMean <= 40) == True :
-            rf_metroExpectPrem = .5
+            rf_metroExpectPrem = 50
         elif (rf_metroYearMean > 40) == True :
-            rf_metroExpectPrem = .4
+            rf_metroExpectPrem = 60
             
-        expectedResalePrem = round(rf_metroMeanPrice * rf_metroExpectPrem)
+        expectedResalePrem = rf_metroExpectPrem
         
         if actualResalePrem > expectedResalePrem :
-            score = '1 Above Expected Premium'
+            score = '1 (Above Expected Premium)'
         elif actualResalePrem < expectedResalePrem :
-            score = '3 Below Expected Premium'
+            score = '3 (Below Expected Premium)'
         elif actualResalePrem == expectedResalePrem :
-            score = '2 In Line with Expected Premium'
+            score = '2 (In Line with Expected Premium)'
 
         rf_metroMeanPrice = '{:,}'.format(rf_metroMeanPrice)
-        expectedResalePrem  = '{:,}'.format(expectedResalePrem)
-        actualResalePrem  = '{:,}'.format(actualResalePrem)
+        # expectedResalePrem  = '{:,}'.format(expectedResalePrem)
+        # actualResalePrem  = '{:,}'.format(actualResalePrem)
     
 
         resale_price = f'${rf_metroMeanPrice}'
         resale_yr = f'{rf_metroYearMean} years old'
-        resale_expPrem = f'${expectedResalePrem}'
-        resale_actPrem = f'${actualResalePrem}'
+        resale_expPrem = f'{expectedResalePrem}%'
+        resale_actPrem = f'{actualResalePrem}%'
         score = f'{score}'
         # rf_table = rf_metro
         
