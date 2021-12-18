@@ -14,6 +14,7 @@ import pickle
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from catboost import CatBoostRegressor
+import numpy as np
 
 #--------------------------------------------------------------------------------------------------
 #---------Definitions----------
@@ -157,7 +158,14 @@ predict_layout = html.Div( # Total Row Width = 12
                 html.Br(),
                 html.Hr(),
                 html.H4(id='display-cluster'),
-                html.Br()
+                html.Br(),
+                html.P("On average, houses in this cluster have the following characteristics: "),
+                html.Plaintext(id = 'display-cluster-sf'),
+                html.Plaintext(id = 'display-cluster-bedrooms'),
+                html.Plaintext(id = 'display-cluster-bathrooms'),
+                html.Plaintext(id = 'display-cluster-year'),
+                html.Plaintext(id = 'display-cluster-price')               
+
             ])
         , width=4),
     ]),
@@ -197,6 +205,38 @@ def set_display_loc(selected_zip):
     Input('zip-drop', 'value'))
 def set_display_loc(selected_zip):
     return f'Cluster: {clusters.loc[selected_zip,"cluster"]}'
+
+@app.callback(
+    Output('display-cluster-bedrooms', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    return f'{np.round(clusters.loc[selected_zip,"avg_cluster_beds"],2)} Bedrooms'
+
+@app.callback(
+    Output('display-cluster-price', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    price = clusters.loc[selected_zip,"avg_cluster_price"]
+    return f'Avg. Price: ${clean_num(round(price))}'
+
+@app.callback(
+    Output('display-cluster-bathrooms', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    return f'{np.round(clusters.loc[selected_zip,"avg_cluster_baths"],2)} Bathrooms'
+
+@app.callback(
+    Output('display-cluster-year', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    return f'Year Built: {np.round(clusters.loc[selected_zip,"avg_cluster_year"],2)}'
+
+
+@app.callback(
+    Output('display-cluster-sf', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    return f'{np.round(clusters.loc[selected_zip,"avg_cluster_sf"],2)} Sq. Ft.'
 
 @app.callback(
     Output('display-proptype', 'children'),
