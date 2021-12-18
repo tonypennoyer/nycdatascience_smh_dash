@@ -19,10 +19,12 @@ distance_areas_list = ['Distance_from_Atlanta', 'Distance_from_Richmond', 'Dista
            'Distance_from_Greenville/Spartanburg','Distance_from_Orlando','Distance_from_Aiken/Augusta','Distance_from_Columbia']
 
 afford_layout = html.Div([
-    dbc.Row([
-        dbc.Col([
-            html.H2("Affordability")
-        ], width=12)
+     html.Div([
+        dbc.Row([
+            dbc.Col([
+                html.P("Specify Metro Area", style={'padding-top':'5px','padding-bottom':'10px'})
+            ], width=12)
+        ]),
     ]),
     html.Div([
         dcc.Dropdown(
@@ -46,6 +48,13 @@ afford_layout = html.Div([
         html.Div(id='display-area')
     ]),
     html.Div([
+        dbc.Row([
+            dbc.Col([
+                html.P("Specify Distance from Metro Area", style={'padding-top':'30px','padding-bottom':'10px'})
+            ], width=12)
+        ]),
+    ]),
+    html.Div([
         dcc.Slider(
             id='distance-dropdown',
             min=0,
@@ -56,32 +65,36 @@ afford_layout = html.Div([
         ),
         html.Div(id='display-distance')
     ]),
+     html.Div([
+        dbc.Row([
+            dbc.Col([
+                html.P("", style={'padding-top':'30px','padding-bottom':'10px'})
+            ], width=12)
+        ]),
+    ]),
     dbc.Col(
         html.Div([
-            html.P(id='display-area'),
-            html.Hr(),
-            html.P(id='display-distance'),
             html.Br(),
-            html.P(id='display-resale-price'),
+            html.P('Average resale home price in this area: ',style={'display':'inline-block','white-space': 'pre'}),
+            html.P(id='display-resale-price',style={'display':'inline-block','font-weight':'bold'}),
             html.Br(),
-            html.P(id='display-resale-year'),
+            html.H5(id='display-resale-year'),
             html.Br(),
-            html.P(id='display-expected-resale-premium'),
+            html.H5(id='display-expected-resale-premium'),
             html.Br(),
-            html.P(id='display-actual-resale-premium'),
+            html.H5(id='display-actual-resale-premium'),
             html.Br(),
-            html.P(id='display-score'),
+            html.H5(id='display-score'),
         ]),
     ),
-    html.Hr(),
 ])
 
 
-@app.callback(
-    Output('display-area', 'children'),
-    Input('area-dropdown', 'value'))
-def area_selected(selected_area):
-    return f'You have selected the {selected_area} area'
+# @app.callback(
+#     Output('display-area', 'children'),
+#     Input('area-dropdown', 'value'))
+# def area_selected(selected_area):
+#     return f'You have selected the {selected_area} area'
 
 @app.callback(
     Output('display-distance', 'children'),
@@ -158,7 +171,14 @@ def affordability(selected_area,selected_distance) :
         elif actualResalePrem == expectedResalePrem :
             score = '2 In Line with Expected Premium'
 
-        resale_price = f'Average resale home price in this area is ${rf_metroMeanPrice}'
+        rf_metroMeanPrice = '{:,}'.format(rf_metroMeanPrice)
+        # rf_metroYearMean = format(rf_metroMeanPrice , ',')
+        # expectedResalePrem = format(rf_metroMeanPrice , ',')
+        # actualResalePrem = format(rf_metroMeanPrice , ',')
+        # score = format(rf_metroMeanPrice , ',')
+
+
+        resale_price = f'${rf_metroMeanPrice}'
         resale_yr = f'Average resale home in this area is {rf_metroYearMean} years old'
         resale_expPrem = f'Expected resale premium is ${expectedResalePrem}'
         resale_actPrem = f'Actual resale premium is ${actualResalePrem}'
