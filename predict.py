@@ -164,8 +164,11 @@ predict_layout = html.Div( # Total Row Width = 12
                 html.Plaintext(id = 'display-cluster-bedrooms'),
                 html.Plaintext(id = 'display-cluster-bathrooms'),
                 html.Plaintext(id = 'display-cluster-year'),
-                html.Plaintext(id = 'display-cluster-price')               
-
+                html.Plaintext(id = 'display-cluster-pricepersf'),
+                html.P("On average, zip codes in this cluster have the following characteristics: "),
+                html.Plaintext(id = 'display-cluster-zip-income'),
+                html.Plaintext(id = 'display-cluster-zip-population'),
+                html.Plaintext(id = 'display-cluster-zip-numhouses')
             ])
         , width=4),
     ]),
@@ -220,6 +223,13 @@ def set_display_loc(selected_zip):
     return f'Avg. Price: ${clean_num(round(price))}'
 
 @app.callback(
+    Output('display-cluster-pricepersf', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    price = clusters.loc[selected_zip,"avg_cluster_price_persf"]
+    return f'Avg. Price per square foot: ${clean_num(round(price))}'
+
+@app.callback(
     Output('display-cluster-bathrooms', 'children'),
     Input('zip-drop', 'value'))
 def set_display_loc(selected_zip):
@@ -230,6 +240,25 @@ def set_display_loc(selected_zip):
     Input('zip-drop', 'value'))
 def set_display_loc(selected_zip):
     return f'Year Built: {np.round(clusters.loc[selected_zip,"avg_cluster_year"],2)}'
+
+@app.callback(
+    Output('display-cluster-zip-income', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    x = clusters.loc[selected_zip,"IncomePerHousehold"]
+    return f'Income Per Household: ${clean_num(round(x))}'
+
+@app.callback(
+    Output('display-cluster-zip-population', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    return f'Population: {clean_num(round(clusters.loc[selected_zip,"Population"]))}'
+
+@app.callback(
+    Output('display-cluster-zip-numhouses', 'children'),
+    Input('zip-drop', 'value'))
+def set_display_loc(selected_zip):
+    return f'Number of Houses: {clean_num(round(clusters.loc[selected_zip,"HouseholdsPerZipCode"]))}'
 
 
 @app.callback(
