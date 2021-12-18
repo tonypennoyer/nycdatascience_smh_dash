@@ -1,6 +1,7 @@
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import dash
+import dash_table
 import pickle
 import dash_html_components as html
 import dash_core_components as dcc
@@ -65,28 +66,40 @@ afford_layout = html.Div([
         ),
         html.Div(id='display-distance')
     ]),
-     html.Div([
+    html.Div([
         dbc.Row([
             dbc.Col([
-                html.P("", style={'padding-top':'30px','padding-bottom':'10px'})
+                html.P("", style={'padding-top':'5px'})
             ], width=12)
         ]),
     ]),
     dbc.Col(
         html.Div([
+            html.Hr(),
             html.Br(),
             html.P('Average resale home price in this area: ',style={'display':'inline-block','white-space': 'pre'}),
             html.P(id='display-resale-price',style={'display':'inline-block','font-weight':'bold'}),
             html.Br(),
-            html.H5(id='display-resale-year'),
+            html.P('Average resale home age in this area: ',style={'display':'inline-block','white-space': 'pre'}),
+            html.P(id='display-resale-year',style={'display':'inline-block','font-weight':'bold'}),
             html.Br(),
-            html.H5(id='display-expected-resale-premium'),
+            html.P('Expected resale premium in this area: ',style={'display':'inline-block','white-space': 'pre'}),
+            html.P(id='display-expected-resale-premium',style={'display':'inline-block','font-weight':'bold'}),
             html.Br(),
-            html.H5(id='display-actual-resale-premium'),
+            html.P('Actual resale premium in this area: ',style={'display':'inline-block','white-space': 'pre'}),
+            html.P(id='display-actual-resale-premium',style={'display':'inline-block','font-weight':'bold'}),
             html.Br(),
-            html.H5(id='display-score'),
+            html.P('Score: ',style={'display':'inline-block','white-space': 'pre'}),
+            html.P(id='display-score',style={'display':'inline-block','font-weight':'bold'}),
         ]),
     ),
+    # html.Div([
+    #     dash_table.DataTable(
+    #         id='rf-table',
+    #         columns=[{"name": i, "id": i} for i in rf_table.columns],
+    #         data=rf_table.to_dict('records'),
+    #     ),
+    # ]),
 ])
 
 
@@ -140,6 +153,7 @@ def affordability(selected_area,selected_distance) :
         resale_expPrem = ''
         resale_actPrem = ''
         score = ''
+    
         return resale_price, resale_yr,resale_expPrem, resale_actPrem, score
     elif len(rf_metro) > 1 : 
         smh_metroMeanPrice = round(smh_metro["MedianSalesPrice"].mean())
@@ -172,17 +186,16 @@ def affordability(selected_area,selected_distance) :
             score = '2 In Line with Expected Premium'
 
         rf_metroMeanPrice = '{:,}'.format(rf_metroMeanPrice)
-        # rf_metroYearMean = format(rf_metroMeanPrice , ',')
-        # expectedResalePrem = format(rf_metroMeanPrice , ',')
-        # actualResalePrem = format(rf_metroMeanPrice , ',')
-        # score = format(rf_metroMeanPrice , ',')
-
+        expectedResalePrem  = '{:,}'.format(expectedResalePrem)
+        actualResalePrem  = '{:,}'.format(actualResalePrem)
+    
 
         resale_price = f'${rf_metroMeanPrice}'
-        resale_yr = f'Average resale home in this area is {rf_metroYearMean} years old'
-        resale_expPrem = f'Expected resale premium is ${expectedResalePrem}'
-        resale_actPrem = f'Actual resale premium is ${actualResalePrem}'
-        score = f'The Relative Afford Score is {score}'
+        resale_yr = f'{rf_metroYearMean} years old'
+        resale_expPrem = f'${expectedResalePrem}'
+        resale_actPrem = f'${actualResalePrem}'
+        score = f'{score}'
+        # rf_table = rf_metro
         
         return resale_price, resale_yr,resale_expPrem, resale_actPrem, score
 

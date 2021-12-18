@@ -1,4 +1,5 @@
 import dash
+import dash_table
 from dash import html
 
 from dash import dcc
