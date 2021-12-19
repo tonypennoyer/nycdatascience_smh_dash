@@ -206,8 +206,14 @@ def set_display_loc(selected_zip):
 @app.callback(
     Output('display-cluster', 'children'),
     Input('zip-drop', 'value'))
-def set_display_loc(selected_zip):
-    return f'Cluster: {round(clusters.loc[selected_zip,"cluster"])}'
+def set_display_clust(selected_zip):
+    clust_dict = {
+        0:'Average',
+        1:'Cheap',
+        2:'Expensive',
+        3:'Affordable'
+    }
+    return f'Cluster {int(clusters.loc[selected_zip,"cluster"])}: {clust_dict[int(clusters.loc[selected_zip,"cluster"])]}'
 
 @app.callback(
     Output('display-cluster-bedrooms', 'children'),
@@ -315,4 +321,4 @@ def set_price_display(selected_zip, selected_pt, selected_sf, selected_bed, sele
         X_pred['BATHS'] = selected_bath
         X_pred['YearBuilt'] = selected_year
         pred_prx = 10**pickled_model.predict(X_pred)
-        return f'$ {clean_num(round(pred_prx - pred_prx*0.1,-4))} - {clean_num(round(pred_prx + pred_prx*0.1,-4))}'
+        return f'$ {clean_num(round(pred_prx - pred_prx*0.05,-4))} - {clean_num(round(pred_prx + pred_prx*0.05,-4))}'
