@@ -195,7 +195,7 @@ def set_zip_value(available_options):
     Output('display-loc', 'children'),
     Input('msa-drop', 'value'))
 def set_display_loc(selected_msa):
-    return f'{selected_msa})'
+    return f'{selected_msa}'
 
 @app.callback(
     Output('display-ZIP', 'children'),
@@ -207,7 +207,7 @@ def set_display_loc(selected_zip):
     Output('display-cluster', 'children'),
     Input('zip-drop', 'value'))
 def set_display_loc(selected_zip):
-    return f'Cluster: {clusters.loc[selected_zip,"cluster"]}'
+    return f'Cluster: {round(clusters.loc[selected_zip,"cluster"])}'
 
 @app.callback(
     Output('display-cluster-bedrooms', 'children'),
@@ -315,4 +315,4 @@ def set_price_display(selected_zip, selected_pt, selected_sf, selected_bed, sele
         X_pred['BATHS'] = selected_bath
         X_pred['YearBuilt'] = selected_year
         pred_prx = 10**pickled_model.predict(X_pred)
-        return f'$ {clean_num(round(pred_prx - pred_prx*0.05,-4))} - {clean_num(round(pred_prx + pred_prx*0.05,-4))}'
+        return f'$ {clean_num(round(pred_prx - pred_prx*0.1,-4))} - {clean_num(round(pred_prx + pred_prx*0.1,-4))}'
