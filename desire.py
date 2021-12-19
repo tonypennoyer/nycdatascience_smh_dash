@@ -18,7 +18,8 @@ fig1 = px.scatter(zip_data, y = 'IncomePerHousehold', x = 'Population', color = 
 fig1.update_layout(title_x = 0.5)
 
 ## Create fig2 (Parallel line graph with characteristics )
-fig2  = px.parallel_coordinates(grouped, color = 'cluster', dimensions = ['cluster','Population', 'AverageHouseValue', 'IncomePerHousehold'], title = "Median Characteristics by Cluster")
+grouped.rename(columns = {'over_65_ratio': "% Population Over 65"}, inplace = True)
+fig2  = px.parallel_coordinates(grouped, color = 'cluster', dimensions = ['cluster','Population', 'AverageHouseValue', 'IncomePerHousehold', '% Population Over 65'], title = "Average Characteristics by Cluster")
 fig2.update_layout(title_x = 0.5)
 
 ## Create fig3 (Cluster size by zipcode count )
