@@ -66,16 +66,21 @@ afford_layout = html.Div([
                 step=1,
                 value=20,
                 tooltip={"placement": "bottom", "always_visible": True}),
-            html.Br(),
+            html.Hr(),
+            html.P(id='display-area'),
+            html.P(id='display-distance'),
+            html.P(id='display-house-num'),
             ])
         , width=4),
 
         dbc.Col(
             html.Div([
-                html.P('Relative Afford Score: ',style={'white-space': 'pre'}),
+                html.P('Relative Afford Score',style={'white-space': 'pre'}),
                 html.H3(id='display-score',style={'font-weight':'bold'}),
                 html.Br(),
                 html.Hr(),
+                html.P('Average smh home value: ',style={'display':'inline-block','white-space': 'pre'}),
+                html.P(id='display-smh-price',style={'display':'inline-block'}),
                 html.Br(),
                 html.P('Average resale home value: ',style={'display':'inline-block','white-space': 'pre'}),
                 html.P(id='display-resale-price',style={'display':'inline-block'}),
@@ -90,16 +95,16 @@ afford_layout = html.Div([
                 html.P(id='display-actual-resale-premium',style={'display':'inline-block'}),
                 html.Br(),
             ])
-        , width=5),
+        , width=4),
         dbc.Col(
             html.Div([
-                html.P(id='display-area'),
-                html.H4(id='display-distance',style={'padding-bottom':'5px'}),
+                html.P('Relative Affordability Ranking'),
+                html.H3(id='display-afford-rank'),
                 html.Br(),
                 html.Hr(),
-                html.P(id='display-house-num'),
+                html.Img(src="https://i.ibb.co/PhcW6kd/croppedgraph.jpg",style={'height':'190px'})
             ])
-        , width=3),
+        , width=4),
     ]),
     html.Hr(),
     html.Div([
@@ -143,6 +148,8 @@ def distance_selected(selected_distance):
 
 @app.callback(
     [
+        Output('display-afford-rank', 'children'),
+        Output('display-smh-price', 'children'),
         Output('display-resale-price', 'children'),
         Output('display-resale-year', 'children'),
         Output('display-expected-resale-premium', 'children'),
@@ -174,7 +181,7 @@ def affordability(selected_area,selected_distance) :
 
     # if no homes produce error msg
     if len(rf_metro) < 1 | len(smh_metro) :
-        rf_metro = rf_metro.drop(['Unnamed: 0','SALE TYPE', 'DAYS ON MARKET',
+        rf_metro = rf_metro.drop(['Unnamed: 0.1','Unnamed: 0','SALE TYPE', 'DAYS ON MARKET',
             '$/SQUARE FEET', 'HOA/MONTH','Location', 'zip', 'lat_long','LOT SIZE',
             'Distance_from_Atlanta', 'Distance_from_Richmond',
             'Distance_from_Charleston', 'Distance_from_Northern Virginia',
@@ -182,6 +189,9 @@ def affordability(selected_area,selected_distance) :
             'Distance_from_Raleigh', 'Distance_from_Charlotte',
             'Distance_from_Greenville/Spartanburg', 'Distance_from_Orlando',
             'Distance_from_Aiken/Augusta', 'Distance_from_Columbia'], axis=1)
+
+        affordability_rank = ''
+        smh_home_price = ''
         resale_price = 'No homes in this radius, pick a larger radius'
         resale_yr = ''
         resale_expPrem = ''
@@ -191,7 +201,7 @@ def affordability(selected_area,selected_distance) :
         table_data = rf_metro.to_dict('records')
         table_cols = [{"name": i, "id": i} for i in rf_metro.columns]
     
-        return resale_price, resale_yr,resale_expPrem, resale_actPrem, score , house_num, table_data, table_cols
+        return affordability_rank,smh_home_price,resale_price, resale_yr,resale_expPrem, resale_actPrem, score , house_num, table_data, table_cols
     elif len(rf_metro) > 1 : 
         smh_metroMeanPrice = round(smh_metro["MedianSalesPrice"].mean())
         rf_metroMeanPrice = round(rf_metro["Price"].mean())
@@ -216,16 +226,35 @@ def affordability(selected_area,selected_distance) :
         expectedResalePrem = rf_metroExpectPrem
         
         if actualResalePrem > expectedResalePrem :
-            score = '1 (Above Expected Premium)'
+            score = 'Above Expected Premium'
+            rel_score = 1
         elif actualResalePrem < expectedResalePrem :
-            score = '3 (Below Expected Premium)'
-        elif actualResalePrem == expectedResalePrem :
-            score = '2 (In Line with Expected Premium)'
+            score = 'Below Expected Premium'
+            rel_score = 3
+        elif ((actualResalePrem - expectedResalePrem) < 5):
+            score = 'In Line with Expected Premium'
+            rel_score = 2
+
+        if (expectedResalePrem - actualResalePrem) > (expectedResalePrem * 2):
+            afford_rank = '7 (Relatively Affordable)'
+        elif (expectedResalePrem - actualResalePrem) > (expectedResalePrem * 1.5):
+            afford_rank = '6 (Relatively Affordable)'
+        elif (expectedResalePrem - actualResalePrem) > 3 :
+            afford_rank = '5 (Relatively Affordable)'
+        elif (expectedResalePrem - actualResalePrem) > .5 :
+            afford_rank = '4 (Moderate Relative Affordability)'
+        elif (expectedResalePrem - actualResalePrem) > (-3) :
+            afford_rank = '3 (Moderate Relative Affordability)'
+        elif (expectedResalePrem - actualResalePrem) > (-5) :
+            afford_rank = '2 (Not Relative Affordable)'
+        elif (expectedResalePrem - actualResalePrem) > (-10) :
+            afford_rank = '1 (Not Relative Affordable)'
 
         rf_metroMeanPrice = '{:,}'.format(rf_metroMeanPrice)
+        smh_metroMeanPrice = '{:,}'.format(smh_metroMeanPrice)
         house_num_data = len(rf_metro)
 
-        rf_metro = rf_metro.drop(['Unnamed: 0','SALE TYPE', 'DAYS ON MARKET',
+        rf_metro = rf_metro.drop(['Unnamed: 0.1','Unnamed: 0','SALE TYPE', 'DAYS ON MARKET',
             '$/SQUARE FEET', 'HOA/MONTH','Location', 'zip', 'lat_long','LOT SIZE',
             'Distance_from_Atlanta', 'Distance_from_Richmond',
             'Distance_from_Charleston', 'Distance_from_Northern Virginia',
@@ -236,7 +265,8 @@ def affordability(selected_area,selected_distance) :
 
         rf_metro = rf_metro.fillna('NaN')
 
-
+        affordability_rank = afford_rank
+        smh_home_price = f'${smh_metroMeanPrice}'
         resale_price = f'${rf_metroMeanPrice}'
         resale_yr = f'{rf_metroYearMean} years old'
         resale_expPrem = f'{expectedResalePrem}%'
@@ -247,7 +277,7 @@ def affordability(selected_area,selected_distance) :
         table_cols = [{"name": i, "id": i} for i in rf_metro.columns]
     
         
-        return resale_price, resale_yr,resale_expPrem, resale_actPrem, score, house_num, table_data, table_cols
+        return affordability_rank, smh_home_price, resale_price, resale_yr,resale_expPrem, resale_actPrem, score, house_num, table_data, table_cols
 
 
 
