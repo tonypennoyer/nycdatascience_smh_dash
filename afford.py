@@ -95,16 +95,7 @@ afford_layout = html.Div([
                 html.P(id='display-actual-resale-premium',style={'display':'inline-block'}),
                 html.Br(),
             ])
-        , width=4),
-        dbc.Col(
-            html.Div([
-                html.P('Relative Affordability Ranking'),
-                html.H3(id='display-afford-rank'),
-                html.Br(),
-                html.Hr(),
-                html.Img(src="https://i.ibb.co/PhcW6kd/croppedgraph.jpg",style={'height':'190px'})
-            ])
-        , width=4),
+        , width=8),
     ]),
     html.Hr(),
     html.Div([
@@ -148,7 +139,6 @@ def distance_selected(selected_distance):
 
 @app.callback(
     [
-        Output('display-afford-rank', 'children'),
         Output('display-smh-price', 'children'),
         Output('display-resale-price', 'children'),
         Output('display-resale-year', 'children'),
@@ -201,7 +191,7 @@ def affordability(selected_area,selected_distance) :
         table_data = rf_metro.to_dict('records')
         table_cols = [{"name": i, "id": i} for i in rf_metro.columns]
     
-        return affordability_rank,smh_home_price,resale_price, resale_yr,resale_expPrem, resale_actPrem, score , house_num, table_data, table_cols
+        return smh_home_price,resale_price, resale_yr,resale_expPrem, resale_actPrem, score , house_num, table_data, table_cols
     elif len(rf_metro) > 1 : 
         smh_metroMeanPrice = round(smh_metro["MedianSalesPrice"].mean())
         rf_metroMeanPrice = round(rf_metro["Price"].mean())
@@ -277,7 +267,7 @@ def affordability(selected_area,selected_distance) :
         table_cols = [{"name": i, "id": i} for i in rf_metro.columns]
     
         
-        return affordability_rank, smh_home_price, resale_price, resale_yr,resale_expPrem, resale_actPrem, score, house_num, table_data, table_cols
+        return smh_home_price, resale_price, resale_yr,resale_expPrem, resale_actPrem, score, house_num, table_data, table_cols
 
 
 
