@@ -11,7 +11,7 @@ about_layout = html.Div([
     html.Hr(),
     dbc.Row([
         dbc.Col([
-            html.P(['As part of our capstone project, we made this dash to give Stanley Martin Homes insight into pricing their homes.', html.Br(),html.Br(),
+            html.P(['As part of our capstone project, we made this dash to give our client insight into pricing their homes.', html.Br(),html.Br(),
                 'We are Data Science Fellows at the NYC Data Science Academy.'],style={'display': 'inline-block',
                 'text-transform' : 'none','padding-top': '15px'}),
             # html.H3("Nicole Wang",style={'white-space' : 'nowrap',  'clear': 'both','display': 'inline-block','overflow': 'hidden','text-align' : 'center'}), 

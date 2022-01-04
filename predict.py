@@ -8,7 +8,7 @@ from datetime import date
 todays_date = date.today()
 
 import os
-model_path = os.getcwd() + '\model_assets'
+model_path = os.getcwd() + '/model_assets'
 
 import pickle
 import pandas as pd
@@ -18,18 +18,18 @@ import numpy as np
 
 #--------------------------------------------------------------------------------------------------
 #---------Definitions----------
-locs = pd.read_csv(model_path+'\locations.csv')
-pickled_model = pickle.load(open(model_path+'\SMH_model.pkl', 'rb'))
-zip_encoder = pickle.load(open(model_path+'\zip_encoder.pkl', 'rb'))
-zip_model_data = pd.read_csv(model_path+'\zip_model_data.csv', index_col='ZipCode')
-X_pred = pd.read_csv(model_path+'\X_base.csv', index_col=0, squeeze=True, dtype={'zip':'object'})
+locs = pd.read_csv(model_path+'/locations.csv')
+pickled_model = pickle.load(open(model_path+'/SMH_model.pkl', 'rb'))
+zip_encoder = pickle.load(open(model_path+'/zip_encoder.pkl', 'rb'))
+zip_model_data = pd.read_csv(model_path+'/zip_model_data.csv', index_col='ZipCode')
+X_pred = pd.read_csv(model_path+'/X_base.csv', index_col=0, squeeze=True, dtype={'zip':'object'})
 prop_encode = {'Single Family Residential':0,
                'Condo/Co-op':1,
                'Townhouse':2,
                'Multi-Family (2-4 Unit)':3,
                'Ranch':4,
                'Multi-Family (5+ Unit)':5}
-clusters = pd.read_csv(model_path+'\clusters.csv', index_col='ZipCode')
+clusters = pd.read_csv(model_path+'/clusters.csv', index_col='ZipCode')
 
 # Prepares prediction inputs
 X_pred = X_pred.append(zip_model_data.loc[20002])

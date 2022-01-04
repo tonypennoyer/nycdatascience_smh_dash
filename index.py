@@ -38,7 +38,7 @@ app_tabs = html.Div(
 )
 
 app.layout = dbc.Container([
-    dbc.Row(dbc.Col(html.Img(src="https://i.ibb.co/TmrkhDP/final-smh-final.jpg" ,
+    dbc.Row(dbc.Col(html.Img(src="https://i.ibb.co/ngrHmwR/final-smh.jpg" ,
                             style={'height':'185px'}))),
     html.Hr(),
     dbc.Row(dbc.Col(app_tabs, width=12), className="mb-3"),
